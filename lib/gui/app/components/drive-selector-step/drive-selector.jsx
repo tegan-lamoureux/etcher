@@ -132,12 +132,10 @@ class DriveSelector extends React.PureComponent {
         this.props.currentSelectedDevices.push(drive.device)
       }
       this.forceUpdate()
-      console.log(this.props.currentSelectedDevices)
     }
   }
 
   addDrivesLabels = (drive) => {
-    console.log('labels: ',drive, controller.getDriveStatuses(drive,this.props.image))
     return controller.getDriveStatuses(drive,this.props.image).map((status, index) =>
       <Label type={status.type} key={index} >
         {status.message}

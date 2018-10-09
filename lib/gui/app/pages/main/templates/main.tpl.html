@@ -52,11 +52,11 @@
         <drive-selector-step
           flashing="main.state.isFlashing()"
           disabled="main.shouldDriveStepBeDisabled()"
-          image="main.selection.getImage"
+          get-image="main.selection.getImage"
           should-show-drives-button="drive.shouldShowDrivesButton()"
           open-drive-selector="main.openDriveSelector"
-          has-compatibility-status="main.constraints.hasListDriveImageCompatibilityStatus(main.selection.getSelectedDrives,main.selection.getImage)"
-          get-compatibility-statuses="main.constraints.getListDriveImageCompatibilityStatuses(main.selection.getSelectedDrives,main.selection.getImage)[0].message"
+          has-compatibility-status="main.constraints.hasListDriveImageCompatibilityStatus(main.selection.getSelectedDrives(),main.selection.getImage())"
+          get-compatibility-statuses="main.constraints.getListDriveImageCompatibilityStatuses(main.selection.getSelectedDrives(),main.selection.getImage())[0].message"
         >
       </drive-selector-step>
       </div>

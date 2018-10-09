@@ -39,8 +39,6 @@ class DriveSelectorStep extends React.PureComponent {
   constructor(props) {
     super(props)
 
-    console.log('constructor',this.props.image())
-
     this.state = {
       showDetailsModal: false,
       showDriveSelector: false,
@@ -74,16 +72,13 @@ class DriveSelectorStep extends React.PureComponent {
   }
 
   onDriveSelectorClose = (action, selectedDevices) => {
-    console.log('onDriveSelectorClose',selectedDevices)
     if (action == 'CANCEL') {
       this.setState({showDriveSelector: false})
     }
     else if (action == 'DONE') {
       service.deselectAllDrives()
-      console.log('after deselectDrive:',service.getSelectedDevices())
       this.setState({showDriveSelector: false, selectedDevices: service.selectDevices(selectedDevices)})
     }
-    console.log('new state:',service.getSelectedDevices())
   }
 
   render() {
@@ -101,7 +96,7 @@ class DriveSelectorStep extends React.PureComponent {
             {this.state.showDriveSelector &&
               <DriveSelector
                 callback={this.onDriveSelectorClose}
-                image = {this.props.image()}
+                image = {this.props.getImage()}
                 currentSelectedDevices={service.getSelectedDevices()}
               />
             }
@@ -109,8 +104,6 @@ class DriveSelectorStep extends React.PureComponent {
         </Provider>
       )
     }
-    else {
-      console.log('in render',service.getSelectedDevices())
       return (
         <Provider>
           <StepSelection>
@@ -122,11 +115,11 @@ class DriveSelectorStep extends React.PureComponent {
                 onClick={() => this.setState({ showDetailsModal: true})}
               >
                 { middleEllipsis(service.getDrivesTitle(), 20) }
-                { constraints.hasListDriveImageCompatibilityStatus &&
+                { this.props.hasCompatibilityStatus &&
                   <Txt.span className='glyphicon glyphicon-alert'
                     ml='10px'
                     mb='5px'
-                    tooltip={constraints.getListDriveImageCompatibilityStatuses}
+                    tooltip={this.props.getCompatibilityStatuses}
                   />
                 }
               </StepNameButton>
@@ -163,13 +156,12 @@ class DriveSelectorStep extends React.PureComponent {
           {this.state.showDriveSelector &&
             <DriveSelector
               callback={this.onDriveSelectorClose}
-              image = {this.props.image()}
+              image = {this.props.getImage()}
               currentSelectedDevices={service.getSelectedDevices()}
             />
           }
         </Provider>
       )
-    }
   }
 }
 
@@ -178,8 +170,8 @@ DriveSelectorStep.propTypes = {
   flashing: propTypes.bool,
   shouldShowDrivesButton: propTypes.bool,
   hasCompatibilityStatus: propTypes.bool,
-  getCompatibilityStatuses: propTypes.array,
-  image: propTypes.object
+  getCompatibilityStatuses: propTypes.string,
+  getImage: propTypes.func
 }
 
 exports.DriveSelectorStep = DriveSelectorStep

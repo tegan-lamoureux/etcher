@@ -27,7 +27,6 @@ const { colors } = require('./../../theme')
 class DetailsModal extends React.Component {
 
   renderDetails() {
-    console.log(this.props.details)
     return this.props.details.map((line) =>
       <Box key={line.path} mb='10px'>
         <Txt bold color={colors.light.foreground} align='left'> {line.name} - {line.size} </Txt>
