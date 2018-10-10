@@ -71,13 +71,14 @@ class DriveSelectorStep extends React.PureComponent {
     )
   }
 
-  onDriveSelectorClose = (action, selectedDevices) => {
+  onDriveSelectorClose = (action, selectedDrives) => {
     if (action == 'CANCEL') {
       this.setState({showDriveSelector: false})
     }
     else if (action == 'DONE') {
+      console.log('done clicked')
       service.deselectAllDrives()
-      this.setState({showDriveSelector: false, selectedDevices: service.selectDevices(selectedDevices)})
+      this.setState({showDriveSelector: false, selectedDevices: service.selectDrives(selectedDrives)})
     }
   }
 
@@ -97,7 +98,7 @@ class DriveSelectorStep extends React.PureComponent {
               <DriveSelector
                 callback={this.onDriveSelectorClose}
                 image = {this.props.getImage()}
-                currentSelectedDevices={service.getSelectedDevices()}
+                currentSelectedDrives={service.getSelectedDrives()}
               />
             }
           </StepSelection>
@@ -157,7 +158,7 @@ class DriveSelectorStep extends React.PureComponent {
             <DriveSelector
               callback={this.onDriveSelectorClose}
               image = {this.props.getImage()}
-              currentSelectedDevices={service.getSelectedDevices()}
+              currentSelectedDrives={service.getSelectedDrives()}
             />
           }
         </Provider>

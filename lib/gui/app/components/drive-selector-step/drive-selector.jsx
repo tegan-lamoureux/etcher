@@ -111,6 +111,10 @@ class DriveSelector extends React.PureComponent {
     }
   }
 
+  getCurrentSelectedDevices = () => {
+    return this.props.currentSelectedDrives.map((drive) => drive.device)
+  }
+
   componentDidMount () {    //TODO: do not rerender if not needed as in drive selector
     this.timer = setInterval(() => {
       if (!_.isEqual(this.state.availableDrives, controller.getAvailableDrives())) {
@@ -125,11 +129,11 @@ class DriveSelector extends React.PureComponent {
 
   handleClick = (drive) => {
     if (constraints.isDriveValid(drive, this.props.image)) {
-      if (this.props.currentSelectedDevices.includes(drive.device)) {
-        this.props.currentSelectedDevices.splice(this.props.currentSelectedDevices.indexOf(drive.device),1)
+      if (this.getCurrentSelectedDevices().includes(drive.device)) {
+        this.props.currentSelectedDrives.splice(this.getCurrentSelectedDevices().indexOf(drive.device),1)
       }
       else {
-        this.props.currentSelectedDevices.push(drive.device)
+        this.props.currentSelectedDrives.push(drive)
       }
       this.forceUpdate()
     }
@@ -173,7 +177,7 @@ class DriveSelector extends React.PureComponent {
               </Flex>
               <Tick
                 disabled={!constraints.isDriveValid(drive, this.props.image)}
-                success={this.props.currentSelectedDevices.includes(drive.device)}
+                success={this.getCurrentSelectedDevices().includes(drive.device)}
                 className="glyphicon glyphicon-ok"
               />
             </Flex>
@@ -206,6 +210,8 @@ class DriveSelector extends React.PureComponent {
     }
 
   render() {
+    console.log(this.props.currentSelectedDrives)
+    console.log(constraints.hasListDriveImageCompatibilityStatus(this.props.currentSelectedDrives,this.props.image))
     return(
       <Provider>
         <Modal
@@ -219,15 +225,24 @@ class DriveSelector extends React.PureComponent {
             </React.Fragment>
           }
           primaryButtonProps={{
-            disabled: this.props.currentSelectedDevices.length == 0
+            disabled: this.props.currentSelectedDrives.length == 0,
+            warning: constraints.hasListDriveImageCompatibilityStatus(this.props.currentSelectedDrives,this.props.image),
+            primary: !constraints.hasListDriveImageCompatibilityStatus(this.props.currentSelectedDrives,this.props.image)
           }}
           action='Continue'
-          done={() => this.props.callback('DONE', this.props.currentSelectedDevices)}
+          done={() => this.props.callback('DONE', this.props.currentSelectedDrives)}
           cancel={() => this.props.callback('CANCEL')}
         >
-          <DeviceList>
-            {this.renderDrivesList()}
-          </DeviceList>
+          <Box>
+            <DeviceList>
+              {this.renderDrivesList()}
+              {constraints.hasListDriveImageCompatibilityStatus(this.props.currentSelectedDrives,this.props.image) &&
+                <Txt color='#666' align='justify' size='8px'>
+                  WARNING: You have chosen one or more drives with warning label. Proceed with caution!
+                </Txt>
+              }
+            </DeviceList>
+          </Box>
         </Modal>
       </Provider>
     )
@@ -238,7 +253,7 @@ class DriveSelector extends React.PureComponent {
 DriveSelector.propTypes = {
   image: propTypes.object,
   callback: propTypes.func,
-  currentSelectedDevices: propTypes.array
+  currentSelectedDrives: propTypes.array
 }
 
 module.exports = DriveSelector
